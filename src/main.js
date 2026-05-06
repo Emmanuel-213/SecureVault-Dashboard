@@ -97,3 +97,42 @@ fetch("./data.json")
       </div>
     `;
   });
+
+  
+  clearSearchButton.addEventListener("click", () => {
+    state.search = "";
+    searchBox.value = "";
+    render();
+  });
+
+  collapseAllButton.addEventListener("click", () => {
+    state.expanded.clear();
+    if (state.search) {
+      autoExpandSearch();
+    }
+    render();
+  });
+
+  treeEl.addEventListener("click", (event) => {
+    const item = event.target.closest("[data-id]");
+    if (!item) {
+      return;
+    }
+
+    const id = item.dataset.id;
+    const node = nodeMap.get(id);
+    state.focusedId = id;
+
+    if (event.target.closest("[data-star]")) {
+      toggleStar(id);
+      return;
+    }
+
+    if (node.type === "folder") {
+      toggleFolder(id);
+    } else {
+      state.selectedFileId = id;
+    }
+
+    render();
+});
