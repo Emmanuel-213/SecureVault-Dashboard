@@ -64,3 +64,29 @@ app.innerHTML = `
     </main>
   </div>
 `;
+
+
+fetch("./data.json")
+  .then((response) => response.json())
+  .then((data) => {
+    state.data = data;
+    buildMaps(data);
+
+    if (data[0]) {
+      state.focusedId = data[0].id;
+      if (data[0].type === "folder") {
+        state.expanded.add(data[0].id);
+      }
+    }
+
+    addEvents();
+    render();
+  })
+  .catch(() => {
+    detailsContent.innerHTML = `
+      <div class="empty-state">
+        <p class="empty-title">Vault unavailable</p>
+        <p class="muted-copy">Could not load data.json.</p>
+      </div>
+    `;
+  });
