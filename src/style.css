@@ -250,3 +250,91 @@ h2 {
   border-color: rgba(53, 214, 255, 0.45);
   background: rgba(53, 214, 255, 0.08);
 }
+.tree-item.is-selected {
+  background: linear-gradient(90deg, rgba(53, 214, 255, 0.18), rgba(53, 214, 255, 0.04));
+  border-color: rgba(53, 214, 255, 0.38);
+}
+
+.tree-item-main,
+.tree-item-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.tree-item-main {
+  flex: 1;
+}
+
+.caret,
+.node-glyph {
+  width: 1rem;
+  color: var(--muted);
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.node-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.node-name mark {
+  padding: 0 0.15rem;
+  border-radius: 0.3rem;
+  background: rgba(255, 209, 102, 0.22);
+  color: var(--warning);
+}
+
+.node-badge {
+  color: var(--muted);
+  font-size: 0.88rem;
+  white-space: nowrap;
+}
+
+.star-button {
+  width: 2rem;
+  height: 2rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.26);
+}
+
+.star-button.is-on,
+.tree-item.is-starred .star-button {
+  color: var(--warning);
+  background: rgba(255, 209, 102, 0.12);
+}
+
+.details-panel {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.details-card {
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+}
+
+.properties-grid {
+  display: grid;
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+}
+
+.property-block {
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+}
+
+.property-label,
+.favorite-item small,
+.muted-copy {
+  display: block;
+  color: var(--muted);
+}
