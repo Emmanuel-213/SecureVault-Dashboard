@@ -198,3 +198,25 @@ treeEl.addEventListener("keydown", (event) => {
     }
 });
 }
+
+function render() {
+  const visible = getVisibleNodes();
+  const selected = nodeMap.get(state.selectedFileId);
+
+  treeEl.innerHTML = visible.length
+    ? visible.map(renderNode).join("")
+    : `
+      <div class="empty-state">
+        <p class="empty-title">No matching files</p>
+        <p class="muted-copy">Try another search term.</p>
+      </div>
+    `;
+
+  resultsSummary.textContent = `${visible.filter(isFolder).length} folders | ${visible.filter(isFile).length} files visible`;
+  renderDetails(selected);
+  renderFavorites();
+
+  if (document.activeElement !== searchBox) {
+    focusItem();
+  }
+}
