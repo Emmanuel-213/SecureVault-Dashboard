@@ -98,7 +98,13 @@ fetch("./data.json")
     `;
   });
 
-  
+function addEvents() {
+  searchBox.addEventListener("input", () => {
+    state.search = searchBox.value.trim().toLowerCase();
+    autoExpandSearch();
+    render();
+  });
+
   clearSearchButton.addEventListener("click", () => {
     state.search = "";
     searchBox.value = "";
@@ -136,3 +142,59 @@ fetch("./data.json")
 
     render();
 });
+
+
+treeEl.addEventListener("keydown", (event) => {
+    const visible = getVisibleNodes();
+    const index = visible.findIndex((item) => item.id === state.focusedId);
+    if (index === -1) {
+    return;
+    }
+
+    if (event.key === "ArrowDown" && visible[index + 1]) {
+    event.preventDefault();
+    state.focusedId = visible[index + 1].id;
+    focusItem();
+    }
+
+    if (event.key === "ArrowUp" && visible[index - 1]) {
+    event.preventDefault();
+    state.focusedId = visible[index - 1].id;
+    focusItem();
+    }
+
+    if (event.key === "ArrowRight") {
+    event.preventDefault();
+    if (visible[index].type === "folder") {
+        state.expanded.add(visible[index].id);
+        render();
+    }
+    }
+
+    
+    if (event.key === "ArrowLeft") {
+    event.preventDefault();
+    if (visible[index].type === "folder" && state.expanded.has(visible[index].id)) {
+        state.expanded.delete(visible[index].id);
+        render();
+    } else {
+        const parentId = parentMap.get(visible[index].id);
+        if (parentId) {
+        state.focusedId = parentId;
+        focusItem();
+        }
+    }
+    }
+
+    if (event.key === "Enter") {
+    event.preventDefault();
+    const current = visible[index];
+    if (current.type === "file") {
+        state.selectedFileId = current.id;
+    } else {
+        toggleFolder(current.id);
+    }
+    render();
+    }
+});
+}
