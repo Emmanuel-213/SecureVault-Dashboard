@@ -92,7 +92,7 @@ fetch("./data.json")
   .catch(() => {
     detailsContent.innerHTML = `
       <div class="empty-state">
-        <p class="empty-title">Vault unavailable</p>
+        <p class="empty-title">Vault is unavailable</p>
         <p class="muted-copy">Could not load data.json.</p>
       </div>
     `;
