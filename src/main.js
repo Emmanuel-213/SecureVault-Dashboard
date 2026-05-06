@@ -9,6 +9,8 @@ const state = {
   starred: new Set(loadStarredFiles())
 };
 
+const nodeMap = new Map();
+const parentMap = new Map();
 
 app.innerHTML = `
   <div class="shell">
