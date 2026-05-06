@@ -20,7 +20,6 @@ app.innerHTML = `
         <h1>Vault File Explorer</h1>
       </div>
       <div class="topbar-actions">
-        <a class="design-link" href="./design-system.html" target="_blank" rel="noreferrer">Design System</a>
         <button class="ghost-button" id="collapseAllButton" type="button">Collapse all</button>
       </div>
     </header>
