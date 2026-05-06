@@ -221,7 +221,6 @@ function render() {
   }
 }
 
-
 function renderNode(node) {
   const isFolderNode = node.type === "folder";
   const isExpanded = state.expanded.has(node.id);
@@ -266,4 +265,76 @@ function renderNode(node) {
       </div>
     </div>
   `;
+}
+
+detailsContent.innerHTML = `
+    <div class="properties-grid">
+      <div class="property-block">
+        <span class="property-label">Name</span>
+        <strong>${node.name}</strong>
+      </div>
+      <div class="property-block">
+        <span class="property-label">Type</span>
+        <strong>${getFileType(node.name)}</strong>
+      </div>
+      <div class="property-block">
+        <span class="property-label">Size</span>
+        <strong>${node.size || "-"}</strong>
+      </div>
+      <div class="property-block property-path">
+        <span class="property-label">Path</span>
+        <strong>${getPath(node.id).join(" / ")}</strong>
+      </div>
+    </div>
+  `;
+}
+
+function renderFavorites() {
+  const favorites = [...state.starred]
+    .map((id) => nodeMap.get(id))
+    .filter((node) => node && node.type === "file");
+
+  if (!favorites.length) {
+    favoritesList.innerHTML = `
+      <div class="empty-state compact">
+        <p class="muted-copy">No starred files yet.</p>
+      </div>
+    `;
+    return;
+  }
+
+  favoritesList.innerHTML = favorites.map((node) => `
+    <button class="favorite-item" type="button" data-favorite="${node.id}">
+      <span>★ ${node.name}</span>
+      <small>${getPath(node.id).slice(0, -1).join(" / ")}</small>
+    </button>
+  `).join("");
+
+  favoritesList.querySelectorAll("[data-favorite]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const id = button.dataset.favorite;
+      openParents(id);
+      state.focusedId = id;
+      state.selectedFileId = id;
+      render();
+    });
+  });
+}
+
+function getVisibleNodes(nodes = state.data, depth = 0) {
+  let visible = [];
+
+  nodes.forEach((node) => {
+    if (!matchesSearch(node)) {
+      return;
+    }
+
+    visible.push({ ...node, depth, children: node.children || [] });
+
+    if (node.type === "folder" && state.expanded.has(node.id)) {
+      visible = visible.concat(getVisibleNodes(node.children || [], depth + 1));
+    }
+  });
+
+  return visible;
 }
