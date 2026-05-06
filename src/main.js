@@ -267,6 +267,17 @@ function renderNode(node) {
   `;
 }
 
+function renderDetails(node) {
+  if (!node || node.type !== "file") {
+    detailsContent.innerHTML = `
+      <div class="empty-state">
+        <p class="empty-title">No file selected</p>
+        <p class="muted-copy">Click a file to view its details.</p>
+      </div>
+    `;
+    return;
+  }
+  
 detailsContent.innerHTML = `
     <div class="properties-grid">
       <div class="property-block">
