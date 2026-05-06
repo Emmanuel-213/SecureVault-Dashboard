@@ -220,3 +220,50 @@ function render() {
     focusItem();
   }
 }
+
+
+function renderNode(node) {
+  const isFolderNode = node.type === "folder";
+  const isExpanded = state.expanded.has(node.id);
+  const isSelected = state.selectedFileId === node.id;
+  const isFocused = state.focusedId === node.id;
+  const isStarred = state.starred.has(node.id);
+  const typeIcon = getNodeIcon(node);
+  const classes = [
+    "tree-item",
+    isSelected ? "is-selected" : "",
+    isFocused ? "is-focused" : "",
+    isStarred ? "is-starred" : ""
+  ].filter(Boolean).join(" ");
+
+  return `
+    <div
+      id="treeitem-${node.id}"
+      class="${classes}"
+      role="treeitem"
+      tabindex="${isFocused ? "0" : "-1"}"
+      ${isFolderNode ? `aria-expanded="${isExpanded}"` : ""}
+      data-id="${node.id}"
+      style="--depth:${node.depth};"
+    >
+      <div class="tree-item-main">
+        <span class="caret">${isFolderNode ? (isExpanded ? "▼" : "▶") : "•"}</span>
+        <span class="node-glyph">${typeIcon}</span>
+        <span class="node-name">${highlight(node.name)}</span>
+      </div>
+      <div class="tree-item-meta">
+        <span class="node-badge">${isFolderNode ? `${node.children.length} items` : node.size || "-"}</span>
+        ${!isFolderNode ? `
+          <button
+            class="star-button ${isStarred ? "is-on" : ""}"
+            type="button"
+            data-star="true"
+            data-id="${node.id}"
+            aria-label="${isStarred ? "Unstar file" : "Star file"}"
+            title="${isStarred ? "Unstar file" : "Star file"}"
+          >${isStarred ? "★" : "☆"}</button>
+        ` : ""}
+      </div>
+    </div>
+  `;
+}
