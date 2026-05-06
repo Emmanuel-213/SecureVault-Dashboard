@@ -277,7 +277,7 @@ function renderDetails(node) {
     `;
     return;
   }
-  
+
 detailsContent.innerHTML = `
     <div class="properties-grid">
       <div class="property-block">
@@ -348,4 +348,156 @@ function getVisibleNodes(nodes = state.data, depth = 0) {
   });
 
   return visible;
+}
+
+function matchesSearch(node) {
+  if (!state.search) {
+    return true;
+  }
+
+  if (node.name.toLowerCase().includes(state.search)) {
+    return true;
+  }
+
+  return (node.children || []).some(matchesSearch);
+}
+
+function autoExpandSearch(nodes = state.data) {
+  if (!state.search) {
+    return;
+  }
+
+  nodes.forEach((node) => {
+    if (node.type === "folder" && (node.children || []).some(matchesSearch)) {
+      state.expanded.add(node.id);
+    }
+    autoExpandSearch(node.children || []);
+  });
+}
+
+function toggleFolder(id) {
+  if (state.expanded.has(id)) {
+    state.expanded.delete(id);
+  } else {
+    state.expanded.add(id);
+  }
+}
+
+function toggleStar(id) {
+  if (state.starred.has(id)) {
+    state.starred.delete(id);
+  } else {
+    state.starred.add(id);
+  }
+
+  saveStarredFiles();
+  render();
+}
+
+function buildMaps(nodes, parentId = null) {
+  nodes.forEach((node) => {
+    nodeMap.set(node.id, node);
+    if (parentId) {
+      parentMap.set(node.id, parentId);
+    }
+    buildMaps(node.children || [], node.id);
+  });
+}
+
+function openParents(id) {
+  let parentId = parentMap.get(id);
+  while (parentId) {
+    state.expanded.add(parentId);
+    parentId = parentMap.get(parentId);
+  }
+}
+
+function getPath(id) {
+  const path = [];
+  let currentId = id;
+
+  while (currentId) {
+    const current = nodeMap.get(currentId);
+    if (!current) {
+      break;
+    }
+    path.unshift(current.name);
+    currentId = parentMap.get(currentId);
+  }
+
+  return path;
+}
+
+function highlight(text) {
+  if (!state.search) {
+    return text;
+  }
+
+  return text.replace(new RegExp(`(${escapeText(state.search)})`, "ig"), "<mark>$1</mark>");
+}
+
+function escapeText(text) {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function getFileType(name) {
+  const parts = name.split(".");
+  return parts.length > 1 ? parts.pop().toUpperCase() : "File";
+}
+
+function getNodeIcon(node) {
+  if (node.type === "folder") {
+    return "📁";
+  }
+
+  const extension = node.name.split(".").pop().toLowerCase();
+
+  if (extension === "pdf") {
+    return "📕";
+  }
+
+  if (extension === "png") {
+    return "🖼️";
+  }
+
+  if (extension === "xlsx") {
+    return "📊";
+  }
+
+  if (extension === "txt") {
+    return "📄";
+  }
+
+  if (extension === "yml" || extension === "yaml") {
+    return "⚙️";
+  }
+
+  return "📄";
+}
+
+function focusItem() {
+  const item = document.getElementById(`treeitem-${state.focusedId}`);
+  if (item) {
+    item.focus();
+  }
+}
+
+function loadStarredFiles() {
+  try {
+    return JSON.parse(localStorage.getItem("securevault-starred")) || [];
+  } catch {
+    return [];
+  }
+}
+
+function saveStarredFiles() {
+  localStorage.setItem("securevault-starred", JSON.stringify([...state.starred]));
+}
+
+function isFolder(node) {
+  return node.type === "folder";
+}
+
+function isFile(node) {
+  return node.type === "file";
 }
