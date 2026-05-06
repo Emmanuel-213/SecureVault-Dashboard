@@ -65,6 +65,13 @@ app.innerHTML = `
   </div>
 `;
 
+const treeEl = document.getElementById("tree");
+const searchBox = document.getElementById("searchBox");
+const detailsContent = document.getElementById("detailsContent");
+const favoritesList = document.getElementById("favoritesList");
+const resultsSummary = document.getElementById("resultsSummary");
+const collapseAllButton = document.getElementById("collapseAllButton");
+const clearSearchButton = document.getElementById("clearSearchButton");
 
 fetch("./data.json")
   .then((response) => response.json())
