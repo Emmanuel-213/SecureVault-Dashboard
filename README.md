@@ -132,12 +132,12 @@ This project was built entirely with plain HTML, CSS, and JavaScript without usi
 # PROJECT GOAL
 SecureVault already provides a strong backend capable of returning nested folder structures efficiently. However, navigating deeply nested files on the frontend was difficult for users.
 This project solves that problem by introducing:
-i. A recursive file explorer 
-ii. A modern enterprise-focused UI 
-iii. Keyboard accessibility 
-iv. Real-time search and filtering 
-v. A detailed file inspection panel 
-vi. Quick access through starred files 
+* i. A recursive file explorer 
+* ii. A modern enterprise-focused UI 
+* iii. Keyboard accessibility 
+* iv. Real-time search and filtering 
+* v. A detailed file inspection panel 
+* vi. Quick access through starred files 
 The focus was not only functionality, but also easy usability, accessibility, and scalability.
 
 ## Deliverables
