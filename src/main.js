@@ -6,11 +6,13 @@ const state = {
   selectedFileId: null,
   focusedId: null,
   search: "",
+  activeFilters: new Set(),
   starred: new Set(loadStarredFiles())
 };
 
 const nodeMap = new Map();
 const parentMap = new Map();
+const fileTypeFilters = ["pdf", "png", "xlsx", "txt", "yml"];
 
 app.innerHTML = `
   <div class="shell">
@@ -40,6 +42,11 @@ app.innerHTML = `
             <input id="searchBox" type="search" placeholder="Search files and folders">
           </label>
           <button class="ghost-button" id="clearSearchButton" type="button">Clear</button>
+        </div>
+        <div class="filter-row" id="filterRow" aria-label="Filter files by type">
+          ${fileTypeFilters.map((type) => `
+            <button class="filter-chip" type="button" data-filter="${type}" aria-pressed="false">${type.toUpperCase()}</button>
+          `).join("")}
         </div>
 
         <div class="tree-wrapper">
@@ -72,6 +79,7 @@ const favoritesList = document.getElementById("favoritesList");
 const resultsSummary = document.getElementById("resultsSummary");
 const collapseAllButton = document.getElementById("collapseAllButton");
 const clearSearchButton = document.getElementById("clearSearchButton");
+const filterRow = document.getElementById("filterRow");
 
 fetch("./data.json")
   .then((response) => response.json())
@@ -101,21 +109,39 @@ fetch("./data.json")
 function addEvents() {
   searchBox.addEventListener("input", () => {
     state.search = searchBox.value.trim().toLowerCase();
-    autoExpandSearch();
+    autoExpandMatches();
     render();
   });
 
   clearSearchButton.addEventListener("click", () => {
     state.search = "";
     searchBox.value = "";
+    state.activeFilters.clear();
     render();
   });
 
   collapseAllButton.addEventListener("click", () => {
     state.expanded.clear();
-    if (state.search) {
-      autoExpandSearch();
+    if (state.search || state.activeFilters.size) {
+      autoExpandMatches();
     }
+    render();
+  });
+
+  filterRow.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-filter]");
+    if (!button) {
+      return;
+    }
+
+    const filter = button.dataset.filter;
+    if (state.activeFilters.has(filter)) {
+      state.activeFilters.delete(filter);
+    } else {
+      state.activeFilters.add(filter);
+    }
+
+    autoExpandMatches();
     render();
   });
 
@@ -203,8 +229,17 @@ treeEl.addEventListener("keydown", (event) => {
 }
 
 function render() {
+  if (state.search || state.activeFilters.size) {
+    autoExpandMatches();
+  }
+
   const visible = getVisibleNodes();
   const selected = nodeMap.get(state.selectedFileId);
+  const focusedIsVisible = visible.some((node) => node.id === state.focusedId);
+
+  if (!focusedIsVisible) {
+    state.focusedId = visible[0]?.id || null;
+  }
 
   treeEl.innerHTML = visible.length
     ? visible.map(renderNode).join("")
@@ -216,12 +251,21 @@ function render() {
     `;
 
   resultsSummary.textContent = `${visible.filter(isFolder).length} folders | ${visible.filter(isFile).length} files visible`;
+  renderFilters();
   renderDetails(selected);
   renderFavorites();
 
-  if (document.activeElement !== searchBox) {
+  if (document.activeElement !== searchBox && state.focusedId) {
     focusItem();
   }
+}
+
+function renderFilters() {
+  filterRow.querySelectorAll("[data-filter]").forEach((button) => {
+    const isActive = state.activeFilters.has(button.dataset.filter);
+    button.classList.toggle("is-active", isActive);
+    button.setAttribute("aria-pressed", String(isActive));
+  });
 }
 
 function renderNode(node) {
@@ -354,19 +398,17 @@ function getVisibleNodes(nodes = state.data, depth = 0) {
 }
 
 function matchesSearch(node) {
-  if (!state.search) {
-    return true;
+  if (node.type === "file") {
+    return matchesNodeName(node.name) && matchesFileType(node.name);
   }
 
-  if (node.name.toLowerCase().includes(state.search)) {
-    return true;
-  }
-
-  return (node.children || []).some(matchesSearch);
+  const children = node.children || [];
+  const childMatches = children.some(matchesSearch);
+  return childMatches || (!state.activeFilters.size && matchesNodeName(node.name));
 }
 
-function autoExpandSearch(nodes = state.data) {
-  if (!state.search) {
+function autoExpandMatches(nodes = state.data) {
+  if (!state.search && !state.activeFilters.size) {
     return;
   }
 
@@ -374,7 +416,7 @@ function autoExpandSearch(nodes = state.data) {
     if (node.type === "folder" && (node.children || []).some(matchesSearch)) {
       state.expanded.add(node.id);
     }
-    autoExpandSearch(node.children || []);
+    autoExpandMatches(node.children || []);
   });
 }
 
@@ -441,6 +483,19 @@ function highlight(text) {
 
 function escapeText(text) {
   return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function matchesNodeName(name) {
+  return !state.search || name.toLowerCase().includes(state.search);
+}
+
+function matchesFileType(name) {
+  if (!state.activeFilters.size) {
+    return true;
+  }
+
+  const extension = name.split(".").pop().toLowerCase();
+  return state.activeFilters.has(extension) || (extension === "yaml" && state.activeFilters.has("yml"));
 }
 
 function getFileType(name) {

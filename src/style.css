@@ -180,6 +180,38 @@ h2 {
   margin-bottom: var(--space-3);
 }
 
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.filter-chip {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--muted);
+  padding: 0.55rem 0.9rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  transition: transform 140ms ease, border-color 140ms ease, background 140ms ease, color 140ms ease, box-shadow 140ms ease;
+}
+
+.filter-chip:hover {
+  transform: translateY(-1px);
+  border-color: rgba(53, 214, 255, 0.4);
+  color: var(--text);
+}
+
+.filter-chip.is-active {
+  border-color: rgba(53, 214, 255, 0.55);
+  background: linear-gradient(90deg, rgba(53, 214, 255, 0.18), rgba(53, 214, 255, 0.06));
+  color: var(--text);
+  box-shadow: 0 0 0 3px rgba(53, 214, 255, 0.1);
+}
+
 .search-field {
   display: flex;
   align-items: center;
