@@ -107,3 +107,35 @@ If any of the following are incorrect, your submission will be flagged as incomp
 6.  **Documentation:** Have you deleted the original assignment text from the `README.md` and replaced it with your own project documentation?
 
 > **By submitting your work, you acknowledge that failure to meet these criteria effectively ends your application process.**
+
+
+
+
+
+
+
+
+
+
+
+
+MY README
+
+# SecureVault Explorer
+
+SecureVault Explorer is a modern dark-mode file explorer built for SecureVault Inc., an enterprise cloud security company serving law firms and banks. The goal of this project is to turn a hard-to-use flat file list into a cleaner and more scalable interface for browsing deeply nested folders and inspecting file details.
+
+This project was built with plain HTML, CSS, and JavaScript. No component libraries were used. The interface and components were created from scratch to keep the solution lightweight, readable, and easy to understand.
+
+## Project Goal
+
+SecureVault already has a strong backend that returns nested folder data efficiently, but users struggle to manage deeply nested files in the current frontend. This project solves that by introducing a recursive file explorer with a modern UI, keyboard support, search, and a file properties panel.
+
+## Deliverables
+
+- Application: index.html
+- Main logic: src/main.js
+- Styling: /src/style.css
+- Design system reference:https://www.figma.com/design/xUD1WV8IP4eazTOnTYt0zO/SecureVault-Dashboard?t=u6v6AmT0LQtsP0Or-0
+- Data source: data.json
+
