@@ -154,12 +154,14 @@ treeEl.addEventListener("keydown", (event) => {
     if (event.key === "ArrowDown" && visible[index + 1]) {
     event.preventDefault();
     state.focusedId = visible[index + 1].id;
+    syncFocusedItem();
     focusItem();
     }
 
     if (event.key === "ArrowUp" && visible[index - 1]) {
     event.preventDefault();
     state.focusedId = visible[index - 1].id;
+    syncFocusedItem();
     focusItem();
     }
 
@@ -181,6 +183,7 @@ treeEl.addEventListener("keydown", (event) => {
         const parentId = parentMap.get(visible[index].id);
         if (parentId) {
         state.focusedId = parentId;
+        syncFocusedItem();
         focusItem();
         }
     }
@@ -480,6 +483,15 @@ function focusItem() {
   if (item) {
     item.focus();
   }
+}
+
+function syncFocusedItem() {
+  const items = treeEl.querySelectorAll(".tree-item");
+  items.forEach((item) => {
+    const isFocused = item.dataset.id === state.focusedId;
+    item.classList.toggle("is-focused", isFocused);
+    item.tabIndex = isFocused ? 0 : -1;
+  });
 }
 
 function loadStarredFiles() {
