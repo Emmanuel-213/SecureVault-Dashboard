@@ -94,5 +94,10 @@ SecureVault Dashboard/
 *     ── main.js
 *     ── style.css
 
-### How to Run
-Run the project using a local development server, examples: VS Code Live Server
+
+## How to Run the Project
+
+* 1. Clone the Repository
+* 2. Navigate into the Project Folder, securevault-dashboard
+* 3. Open the Project
+* 4. Run the project using a local development server, examples: VS Code Live Server
