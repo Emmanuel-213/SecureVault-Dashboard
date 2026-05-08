@@ -132,23 +132,23 @@ This project was built entirely with plain HTML, CSS, and JavaScript without usi
 # PROJECT GOAL
 SecureVault already provides a strong backend capable of returning nested folder structures efficiently. However, navigating deeply nested files on the frontend was difficult for users.
 This project solves that problem by introducing:
-* i. A recursive file explorer 
-* ii. A modern enterprise-focused UI 
-* iii. Keyboard accessibility 
-* iv. Real-time search and filtering 
-* v. A detailed file inspection panel 
-* vi. Quick access through starred files 
+* i. A recursive file explorer
+* ii. A modern enterprise-focused UI
+* iii. Keyboard accessibility
+* iv. Real-time search and filtering
+* v. A detailed file inspection panel
+* vi. Quick access through starred files
 The focus was not only functionality, but also easy usability, accessibility, and scalability.
 
 ## Deliverables
-index.html — Main application entry 
-src/main.js — Core application logic 
-src/style.css — Styling and layout 
-data.json — Provided data source 
-design-system.html — Design system reference
+* index.html for main application entry
+* src/main.js for application logic
+* src/style.css for styling and layout
+* data.json provided data source
+* https://www.figma.com/design/xUD1WV8IP4eazTOnTYt0zO/SecureVault-Dashboard?t=3P5mk8jL8e45zmbZ-0 — Design system reference
 
 ## Design Direction
-The interface follows a dark-mode visual style based on the client requirement that the product should feel cyber-secure, precise, and fast.
+I ensured that the interface follows a dark-mode visual style based on the client requirement that the product should feel cyber-secure, precise, and fast.
 Some of the major design decisions I took include:
 * i. Layered dark backgrounds to create a secure enterprise look
 * ii. Cyan accent colors for active and focused states
@@ -172,7 +172,7 @@ Clicking a file selects it and displays its details inside the properties panel.
 The panel displays, File name, File type, File size, and Full file path
 
 ## 3. Keyboard Accessibility
-The explorer supports full keyboard interaction for accessibility and power users.
+I made sure that the explorer supports full keyboard interaction for accessibility and power users.
 I used the following supported controls; ArrowUp, ArrowDown, ArrowRight, ArrowLeft, and Enter.
 I have set the arrow up key for moving to previous visible item, the arrow right key for expanding folders, the left arrow key for collapsing folders and for focusing on parent folder.
 The enter key is also for selecting files and opening folders.
