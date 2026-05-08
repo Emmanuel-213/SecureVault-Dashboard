@@ -1,4 +1,4 @@
-const app = document.getElementById("app");
+const app = document.getElementById ("app");
 
 const state = {
   data: [],
@@ -568,3 +568,4 @@ function isFolder(node) {
 function isFile(node) {
   return node.type === "file";
 }
+
